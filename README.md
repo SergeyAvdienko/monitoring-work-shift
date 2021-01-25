@@ -21,9 +21,10 @@
 
 `git clone https://github.com/SergeyAvdienko/monitoring-work-shift.git`
 
-`cd monitoring-work-shift`
+`cd monitoring-work-shift/monitoring-work-shifts`
 
 `npm install`
 
 `npm start`
 
+`open your browser on http://localhost:4200/`
