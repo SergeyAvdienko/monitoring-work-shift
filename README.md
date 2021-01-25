@@ -21,7 +21,7 @@
 
 `git clone https://github.com/SergeyAvdienko/monitoring-work-shift.git`
 
-`cd monitoring-work-shifts`
+`cd monitoring-work-shift`
 
 `npm install`
 
