@@ -1,0 +1,21 @@
+<div class="block" [ngSwitch]="cellFormat.type">
+  <p *ngSwitchCase="'text'">{{cellFormat.title}}</p>
+  <div *ngIf="cellFormat.icon === 'fas fa-edit'">
+    <p *ngSwitchCase="'icon'">
+      <span class="icon has-text-info" (click)="updateRow()">
+        <i [class]="cellFormat.icon"></i>
+      </span>
+    </p>
+  </div>
+  <div *ngIf="cellFormat.icon === 'fas fa-trash'">
+    <p *ngSwitchCase="'icon'">
+      <span class="icon has-text-danger" (click)="deleteRow()">
+        <i [class]="cellFormat.icon"></i>
+      </span>
+    </p>
+  </div>
+  <p *ngSwitchCase="'date'">{{cellFormat.date | date: "dd.MM.yyyy HH:mm"}}</p>
+  <p *ngSwitchCase="'summOnload'">{{cellFormat.summOnload}} т</p>
+  <p *ngSwitchCase="'summOffload'">{{cellFormat.summOffload}} т</p>
+  <p *ngSwitchCase="'summWork'">{{cellFormat.summWork}} т</p>
+</div>

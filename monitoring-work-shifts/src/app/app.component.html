@@ -1,0 +1,111 @@
+<div class="container pt-2">
+
+  <!-- Навбар -->
+  <nav class="navbar is-transparent">
+
+    <!-- Логотип -->
+    <div class="navbar-brand">
+
+      <!-- Лого -->
+      <a class="navbar-item" href="/">
+        <h1 class="title is-4">ТЕСТОВОЕ ЗАДАНИЕ</h1>
+      </a>
+
+      <!-- Бургер -->
+      <div class="navbar-burger" data-target="navbarExampleTransparentExample">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+
+    </div>
+
+    <div id="navbarExampleTransparentExample" class="navbar-menu">
+
+      <!-- Докуметация к проекту и резюме -->
+      <div class="navbar-start">
+
+        <!-- Ссылка на документацию -->
+        <a class="navbar-item"
+          href="https://drive.google.com/drive/folders/1ezRHrlXT-OZ64qWQncIJjdZy80_20CkG?usp=sharing" target="_blank">
+          Документация к проекту
+        </a>
+
+        <!-- Ссылка на резюме -->
+        <a class="navbar-item" href="https://novosibirsk.hh.ru/resume/9615ed90ff032c5e180039ed1f485934755443"
+          target="_blank">
+          Ссылка на резюме Адиенко С.А.
+        </a>
+
+      </div>
+
+      <!-- Правая часть навбара -->
+      <div class="navbar-end">
+        <div class="navbar-item">
+          <div class="field is-grouped">
+            <p class="control">
+
+              <!-- Репозиторий в новой вкладке -->
+              <a class="bd-tw-button button" target="_blank"
+                href="https://github.com/SergeyAvdienko/monitoring-work-shift.git">
+                <span class="icon">
+                  <i class="fab fa-github"></i>
+                </span>
+                <span>
+                  Репозиторий с кодом проекта
+                </span>
+              </a>
+
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </nav>
+
+  <progress class="progress is-small mt-3" value="0" max="100" #progress></progress>
+
+  <div class="box" *ngIf="error">
+    <div class="notification is-danger">
+      {{ error }}
+    </div>
+  </div>
+
+  <!-- Секция с таблицой рабочих смен -->
+  <section class="section">
+    <div class="container">
+
+      <!-- Шапка таблицы -->
+      <div class="columns">
+
+        <!-- Название таблицы -->
+        <div class="column">
+          <h1 class="title">{{title}}</h1>
+        </div>
+
+        <!-- Cтрока ввода для фильтра нужных строк Row по ячейкам Cell в списке рабочих смен  -->
+        <div class="column is-one-quarter">
+          <app-filter (onSearch)="filter($event)"></app-filter>
+        </div>
+
+        <!-- Кнопка для добавления новых данных (рабочих смен)  -->
+        <div class="column is-one-fifth">
+          <app-add-new-row-button (openModal)="openModal($event)"></app-add-new-row-button>
+        </div>
+
+      </div>
+
+      <!-- Список рабочих смен -->
+      <app-table [onSearch]="onSearch" [rowsBody]="rowsBody" (deleteDataUp)="deleteRow($event)"
+        (updateDataUp)="updateRow($event)"></app-table>
+
+      <!-- Форма -->
+      <app-modal-window [open]="open" (closeModal)="closeModal($event)" (addNewRow)="addNewRow($event)" [form]="form"
+        [id]="id" (updateOldRow)="addOldRow($event)">
+      </app-modal-window>
+
+    </div>
+  </section>
+
+</div>

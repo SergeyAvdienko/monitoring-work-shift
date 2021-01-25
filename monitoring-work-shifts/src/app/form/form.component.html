@@ -1,0 +1,306 @@
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <div class="modal-content">
+
+    <!-- Заголовок и кнопка закрытия модального окна -->
+    <header class="modal-card-head">
+      <p class="modal-card-title">{{title}}</p>
+      <button class="delete" type="button" aria-label="close" (click)="closeModalWindow()"></button>
+    </header>
+
+    <!-- Основной контент модального окна -->
+    <section class="modal-card-body">
+
+      <!-- Выбор типа крана -->
+      <div class="field">
+        <label class="label">Тип крана</label>
+        <div class="select"
+          [ngClass]="{ 'is-danger': form.get('cranType')?.invalid && id == '', 'is-success': form.get('cranType')?.valid && id == '', 'is-info': id != '' }">
+          <select formControlName="cranType">
+            <option value="" disabled selected>Выберите тип крана</option>
+            <option *ngFor="let cran of defaultService.defaultCranType" [disabled]="id != ''" [ngValue]="cran.type">{{
+              cran.type }}</option>
+          </select>
+        </div>
+        <div class="validation" *ngIf="form.get('cranType')?.invalid || form.get('cranType')?.touched">
+          <p class="help is-danger" *ngIf="form.get('cranType')?.errors?.required">Должен быть выбран тип крана</p>
+        </div>
+        <div class="validation" *ngIf="form.get('cranType')?.valid || form.get('cranType')?.touched">
+          <p class="help is-success" *ngIf="id == ''">Выбран тип крана: {{form.get('cranType')?.value}}</p>
+          <p class="help is-info" *ngIf="id != ''">При редактировании существующей смены изменить значение не возможно!
+          </p>
+        </div>
+      </div>
+
+      <!-- Выбор ответственного -->
+      <div class="field">
+        <label class="label">Ответственный</label>
+        <div class="control has-icons-left has-icons-right">
+          <input class="input" type="text" placeholder="Фамилия и инициалы" formControlName="workerMan"
+            [ngClass]="{ 'is-danger': form.get('workerMan')?.invalid, 'is-success': form.get('workerMan')?.valid }">
+          <span class="icon is-small is-left">
+            <i class="fas fa-user"></i>
+          </span>
+          <div class="validation" *ngIf="form.get('workerMan')?.invalid || form.get('workerMan')?.touched">
+            <p class="help is-danger" *ngIf="form.get('workerMan')?.errors?.required">Поле не должно быть пустым</p>
+            <p class="help is-danger" *ngIf="form.get('workerMan')?.errors?.maxlength">
+              Количество символов не должно превышать {{form.get('workerMan')?.errors?.maxlength.requiredLength}}.
+              Сейчас их количество {{form.get('workerMan')?.errors?.maxlength.actualLength}}
+            </p>
+          </div>
+          <div class="validation" *ngIf="form.get('workerMan')?.valid && form.get('workerMan')?.touched">
+            <p class="help is-success" *ngIf="form.get('workerMan')?.valid">Ответственный сотрудник определен:
+              {{form.get('workerMan')?.value}}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Начало рабочей смены -->
+      <div class="field">
+        <div class="columns mb-0 ">
+          <div class="column">
+            <label class="label">Начало рабочей смены</label>
+            <div class="columns">
+              <div class="column is-two-fifths">
+                <div class="field">
+                  <p class="control">
+                    <input class="input" type="time" formControlName="startTime"
+                      [ngClass]="{ 'is-danger': form.get('startTime')?.invalid, 'is-success': form.get('startTime')?.valid }">
+                  </p>
+                </div>
+              </div>
+              <div class="column">
+                <div class="field">
+                  <p class="control">
+                    <input class="input" type="date" formControlName="startDate"
+                      [ngClass]="{ 'is-danger': form.get('startDate')?.invalid, 'is-success': form.get('startDate')?.valid }">
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="validation" *ngIf=" 
+          form.get('startTime')?.invalid || 
+          form.get('startTime')?.touched || 
+          form.get('startDate')?.invalid || 
+          form.get('startDate')?.touched">
+          <p class="help is-danger" *ngIf="
+            form.get('startTime')?.errors?.required || 
+            form.get('startDate')?.errors?.required">
+            Поля не должны быть пустыми
+          </p>
+        </div>
+        <div class="validation" *ngIf=" 
+          form.get('startTime')?.valid && 
+          form.get('startDate')?.valid">
+          <p class="help is-success">
+            Начало смены в {{form.get('startTime')?.value}} {{form.get('startDate')?.value | date: "dd.MM.yyyy" }} года
+          </p>
+        </div>
+      </div>
+
+      <!-- Окончание рабочей смены -->
+      <div class="field">
+        <div class="columns mb-0 ">
+          <div class="column">
+            <label class="label">Окончание рабочей смены</label>
+            <div class="columns">
+              <div class="column is-two-fifths">
+                <div class="field">
+                  <p class="control">
+                    <input class="input" type="time" formControlName="endTime"
+                      [ngClass]="{ 'is-danger': form.get('endTime')?.invalid, 'is-success': form.get('endTime')?.valid }">
+                  </p>
+                </div>
+              </div>
+              <div class="column">
+                <div class="field">
+                  <p class="control">
+                    <input class="input" type="date" formControlName="endDate"
+                      [ngClass]="{ 'is-danger': form.get('endDate')?.invalid, 'is-success': form.get('endDate')?.valid }">
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="validation" *ngIf=" 
+        form.get('endTime')?.invalid || 
+        form.get('endTime')?.touched || 
+        form.get('endDate')?.invalid || 
+        form.get('endDate')?.touched">
+          <p class="help is-danger" *ngIf="
+        form.get('endTime')?.errors?.required || 
+        form.get('endDate')?.errors?.required">
+            Поля не должны быть пустыми
+          </p>
+        </div>
+        <div class="validation" *ngIf=" 
+          form.get('endTime')?.valid && 
+          form.get('endDate')?.valid">
+          <p class="help is-success">
+            Окончание смены в {{form.get('endTime')?.value}} {{form.get('endDate')?.value | date: "dd.MM.yyyy" }} года
+          </p>
+        </div>
+      </div>
+
+      <!-- Первый кран -->
+      <div class="field mb-0" *ngIf="form.get('cranType')?.valid" formArrayName="firstCranWork">
+        <label class="label">Первый кран</label>
+        <!-- Заголовки для пользователя -->
+        <div class="columns mb-0" *ngIf="getControls().firstCran.controls.length;">
+          <div class="column is-4"><label class="label"><small style="font-weight: 400;">Грузовик</small></label></div>
+          <div class="column is-3"><label class="label"><small style="font-weight: 400;">Погружено тонн</small></label>
+          </div>
+          <div class="column is-3"><label class="label"><small style="font-weight: 400;">Выгружено тонн</small></label>
+          </div>
+          <div class="column is-2"></div>
+        </div>
+        <!-- Основная часть -->
+        <div *ngIf="getControls().firstCran.controls.length;">
+          <div *ngFor="let control of getControls().firstCran.controls; let i = index">
+            <div class="columns mb-0" [formGroupName]="i">
+              <!-- Выбор машины для отгрузки/погрузки -->
+              <div class="column is-4">
+                <div class="select">
+                  <select formControlName="name">
+                    <option value="" disabled selected>Выберите машину</option>
+                    <option *ngFor="let car of defaultService.defaultCarArray" [ngValue]="car.name">
+                      {{ car.name }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <!-- Количество погруженных тонн груза -->
+              <div class="column is-3">
+                <div class="field">
+                  <div class="control">
+                    <input class="input" type="number" placeholder="Загружено" formControlName="onload">
+                  </div>
+                </div>
+              </div>
+              <!-- Количество выгруженных тонн груза -->
+              <div class="column is-3">
+                <div class="field">
+                  <div class="control">
+                    <input class="input" type="number" placeholder="Выгружено" formControlName="offload">
+                  </div>
+                </div>
+              </div>
+              <!-- Удалить запись машина/погружено/выгружено -->
+              <div class="column is-2" style="display: flex; justify-items: center; align-items: center;">
+                <span class="icon" style="flex: 1;" (click)="formService.deleteFirstCran(form, i)">
+                  <i class="fas fa-trash has-text-danger"></i>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Кнопка добавления новой записи машина/погружено/отгружено -->
+        <div class="columns mb-0">
+          <div class="column is-4">
+            <button class="button is-success is-outlined is-fullwidth" type="button"
+              (click)="formService.addCarFirstCran(form)">Добавить
+              запись</button>
+          </div>
+          <div class="column is-3"></div>
+          <div class="column is-3"></div>
+          <div class="column is-2"></div>
+        </div>
+      </div>
+
+      <!-- Второй кран -->
+      <div class="field" *ngIf="form.get('cranType')?.valid && form.get('cranType')?.value == 'Двойной'"
+        formArrayName="secondCranWork">
+        <label class="label">Второй кран</label>
+        <!-- Заголовки для пользователя -->
+        <div class="columns mb-0" *ngIf="getControls().secondCran.controls.length;">
+          <div class="column is-4"><label class="label"><small style="font-weight: 400;">Грузовик</small></label></div>
+          <div class="column is-3"><label class="label"><small style="font-weight: 400;">Погружено тонн</small></label>
+          </div>
+          <div class="column is-3"><label class="label"><small style="font-weight: 400;">Выгружено тонн</small></label>
+          </div>
+          <div class="column is-2"></div>
+        </div>
+        <!-- Основная часть -->
+        <div *ngIf="getControls().secondCran.controls.length;">
+          <div *ngFor="let control of getControls().secondCran.controls; let i = index">
+            <div class="columns mb-0" [formGroupName]="i">
+              <!-- Выбор машины для отгрузки/погрузки -->
+              <div class="column is-4">
+                <div class="select">
+                  <select formControlName="name">
+                    <option value="" disabled selected>Выберите машину</option>
+                    <option *ngFor="let car of defaultService.defaultCarArray" [ngValue]="car.name">
+                      {{ car.name }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <!-- Количество погруженных тонн груза -->
+              <div class="column is-3">
+                <div class="field">
+                  <div class="control">
+                    <input class="input" type="number" placeholder="Загружено" formControlName="onload">
+                  </div>
+                </div>
+              </div>
+              <!-- Количество выгруженных тонн груза -->
+              <div class="column is-3">
+                <div class="field">
+                  <div class="control">
+                    <input class="input" type="number" placeholder="Выгружено" formControlName="offload">
+                  </div>
+                </div>
+              </div>
+              <!-- Удалить запись машина/погружено/выгружено -->
+              <div class="column is-2" style="display: flex; justify-items: center; align-items: center;">
+                <span class="icon" style="flex: 1;" (click)="formService.deleteSecondCran(form, i)">
+                  <i class="fas fa-trash has-text-danger"></i>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Кнопка добавления новой записи машина/погружено/отгружено -->
+        <div class="columns mb-0">
+          <div class="column is-4">
+            <button class="button is-success is-outlined is-fullwidth" type="button"
+              (click)="formService.addCarSecondCran(form)">Добавить
+              запись</button>
+          </div>
+          <div class="column is-3"></div>
+          <div class="column is-3"></div>
+          <div class="column is-2"></div>
+        </div>
+      </div>
+
+      <!-- Поле с расчетами погрузки/выгрузки -->
+      <div class="box is-fullwidth has-text-centered">
+        <div class="tags are-medium">
+          <span class="tag">Погружено тонн:
+            <b class="ml-2">{{ calculate.calculationsWork(form).summOnload }}</b>
+          </span>
+          <span class="tag">Разгружено тонн:
+            <b class="ml-2">{{ calculate.calculationsWork(form).summOffload}}</b>
+          </span>
+          <span class="tag">Всего тонн:
+            <b class="ml-2">{{ calculate.calculationsWork(form).summWork }}</b>
+          </span>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Кнопка отправки формы и закрытия модального окна без сохранения -->
+    <footer class="modal-card-foot">
+      <div class="buttons is-centered">
+        <button class="button is-success" [ngClass]="{ 'is-loading': loading }" type="submit"
+          [disabled]="form.invalid || loading">Сохранить изменения</button>
+        <button class="button is-warning" type="button" (click)="resetForm()">Очистить форму</button>
+        <button class="button is-danger" type="reset" (click)="closeModalWindow()">Завершить и выйти</button>
+      </div>
+    </footer>
+
+  </div>
+</form>

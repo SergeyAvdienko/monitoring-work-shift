@@ -1,0 +1,41 @@
+<div class="teble-container">
+
+  <!-- Таблица с отображением списка рабочих смен -->
+  <table class="table is-striped is-narrow is-hoverable is-fullwidth mt-5" *ngIf="rowsBody.length;">
+
+    <!-- Строка с заголовками столбцов -->
+    <thead>
+      <tr *ngFor="let cells of rowsHead">
+        <th *ngFor="let cell of cells.array">
+          <app-head-table [cell]="cell"></app-head-table>
+        </th>
+      </tr>
+    </thead>
+
+    <!-- Строки с отображением данных (рабочих смен) -->
+    <tbody>
+      <tr *ngFor="let cells of rowsBody">
+        <td *ngFor="let cell of cells.array | filter: onSearch">
+          <app-body-table [cell]="cell" [id]="cells.id" (update)="update($event)" (delete)="delete($event)">
+          </app-body-table>
+        </td>
+      </tr>
+    </tbody>
+
+  </table>
+
+  <!-- Заглушка, если удалены все строки в списке рабочих смен -->
+  <section class="hero has-text-centered" *ngIf="!rowsBody.length;">
+    <div class="hero-body">
+      <div class="container">
+        <h1 class="title">
+          Список смен пуст
+        </h1>
+        <h2 class="subtitle">
+          начните заполнять список смен
+        </h2>
+      </div>
+    </div>
+  </section>
+
+</div>
