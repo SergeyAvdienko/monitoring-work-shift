@@ -19,5 +19,11 @@
 Запуск приложения
 -----------------------------------
 
-`test`
-    test
+`git clone https://github.com/SergeyAvdienko/monitoring-work-shift.git`
+
+`cd monitoring-work-shifts`
+
+`npm install`
+
+`npm start`
+
