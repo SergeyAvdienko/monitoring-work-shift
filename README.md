@@ -16,7 +16,7 @@
 ![screenshot of sample](https://i.ibb.co/dmxBkJ6/2021-01-25-13-38-58.png)
 
 ***
-Запуск приложения
+Установка и запуск проекта
 -----------------------------------
 
 `git clone https://github.com/SergeyAvdienko/monitoring-work-shift.git`
