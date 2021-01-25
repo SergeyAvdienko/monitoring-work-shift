@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
+import { ModalStateService } from '../services/modalState.service';
 
 @Component({
   selector: 'app-add-new-row-button',
@@ -7,12 +8,11 @@ import { Component, EventEmitter, Output } from '@angular/core';
 })
 export class AddNewRowButtonComponent {
 
-  // Передача в компонент App, чтобы перевести значение open в true
-  @Output() openModal = new EventEmitter();
+  constructor(private modalStateService: ModalStateService) { }
 
   // Открыть модальное окно
   onClick() {
-    this.openModal.emit(true);
+    this.modalStateService.setModalState(true);
   }
 
 }

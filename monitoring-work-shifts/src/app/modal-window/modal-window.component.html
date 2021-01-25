@@ -1,10 +1,8 @@
-<div class="modal" [ngClass]="{ 'is-active': open }">
+<div class="modal" [ngClass]="{ 'is-active': modalState.getModalState() }">
   <div class="modal-background" (click)="closeModalWindow()"></div>
 
   <div class="modal-content">
-    <app-form (closeModal)="closeModalWindow()" (onAdd)="onAdd($event)" (onUpdate)="onUpdate($event)" [form]="form"
-      [id]="id"></app-form>
+    <app-form (onAdd)="onAdd($event)" (onUpdate)="onUpdate($event)" [form]="form" [id]="id"></app-form>
   </div>
 
-  <button class="modal-close is-large" aria-label="close" (click)="closeModalWindow()"></button>
 </div>

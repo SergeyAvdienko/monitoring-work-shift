@@ -4,6 +4,7 @@ import { DemoData } from './services/demo.service';
 import { FilterService } from './services/filter.service';
 import { FormService } from './services/form.service';
 import { Http } from './services/http.service';
+import { ModalStateService } from './services/modalState.service';
 import { Row } from './services/rowFactory.service';
 
 @Component({
@@ -40,18 +41,14 @@ export class AppComponent implements OnInit {
 
   // id сроки Row. Используется для поиска нужной строки в массиве
   // Определяет сценарий формы
-  // Спускается в
+  // Спускается в компонент modal-vindow
   id: string = '';
 
-  // Флаг открыта/закрыта форма
-  // Спускается в
-  open!: boolean;
-
   // Данные для рекативной формы
-  // Спускается в
+  // Спускается в компонент modal-vindow
   form!: FormGroup;
 
-  constructor(private filterService: FilterService, private http: Http, private demo: DemoData, private formService: FormService, private fb: FormBuilder) { }
+  constructor(private filterService: FilterService, private http: Http, private demo: DemoData, private formService: FormService, private fb: FormBuilder, private modalState: ModalStateService) { }
 
   ngOnInit(): void {
 
@@ -80,25 +77,12 @@ export class AppComponent implements OnInit {
     this.onSearch = this.filterService.validateStr(event);
   }
 
-  // Передает значение в modalWindow
-  // Открыть модальное окно после клика на кнопку в компоненте add-new-row-button
-  openModal(value: boolean) {
-    if (this.id == '') {
-      // Сценарий CreateRow
-      this.open = value;
-      this.createRow();
-    } else {
-      // Сценарий UpdateRow
-      this.open = value;
-    }
-  }
-
-  // Сообщает о закрытии модального окна в компоненте modalWindow
-  // Сбрасывает в false значение this.open
-  // Сбрасывает в '' значение this.id
-  closeModal(value: boolean) {
-    this.id = '';
-    this.open = value;
+  // Передает значение в modalStateService
+  // Открыть модальное окно после клика
+  // Сценарий действий createRow/updateRow
+  openModal() {
+    this.modalState.setModalState(true);
+    if (this.id == '') this.createRow();
   }
 
   // Добавляет в массив this.rowsBody: Row[] строку row: Row из компонента Form 
@@ -195,7 +179,7 @@ export class AppComponent implements OnInit {
 
         // Фиксируем this.id и спускаем вместе с this.form и вместе c this.open в MadalWindow
         this.id = id;
-        this.openModal(true);
+        this.modalState.setModalState(true);
 
         return;
       };

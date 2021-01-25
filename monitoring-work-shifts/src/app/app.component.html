@@ -91,7 +91,7 @@
 
         <!-- Кнопка для добавления новых данных (рабочих смен)  -->
         <div class="column is-one-fifth">
-          <app-add-new-row-button (openModal)="openModal($event)"></app-add-new-row-button>
+          <app-add-new-row-button (openModal)="openModal()"></app-add-new-row-button>
         </div>
 
       </div>
@@ -101,8 +101,7 @@
         (updateDataUp)="updateRow($event)"></app-table>
 
       <!-- Форма -->
-      <app-modal-window [open]="open" (closeModal)="closeModal($event)" (addNewRow)="addNewRow($event)" [form]="form"
-        [id]="id" (updateOldRow)="addOldRow($event)">
+      <app-modal-window (addNewRow)="addNewRow($event)" [form]="form" [id]="id" (updateOldRow)="addOldRow($event)">
       </app-modal-window>
 
     </div>
