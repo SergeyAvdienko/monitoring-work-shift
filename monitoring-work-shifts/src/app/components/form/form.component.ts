@@ -141,5 +141,8 @@ export class FormComponent {
     this.form = this.formService.createForm();
   }
 
+  trackByFn(index: any, item: any) {
+    return item.id;
+  }
 
 }

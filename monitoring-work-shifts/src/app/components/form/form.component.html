@@ -17,7 +17,8 @@
           [ngClass]="{ 'is-danger': form.get('cranType')?.invalid && id == '', 'is-success': form.get('cranType')?.valid && id == '', 'is-info': id != '' }">
           <select formControlName="cranType">
             <option value="" disabled selected>Выберите тип крана</option>
-            <option *ngFor="let cran of defaultService.defaultCranType" [disabled]="id != ''" [ngValue]="cran.type">{{
+            <option *ngFor="let cran of defaultService.defaultCranType; trackBy: trackByFn" [disabled]="id != ''"
+              [ngValue]="cran.type">{{
               cran.type }}</option>
           </select>
         </div>
@@ -165,7 +166,7 @@
                 <div class="select">
                   <select formControlName="name">
                     <option value="" disabled selected>Выберите машину</option>
-                    <option *ngFor="let car of defaultService.defaultCarArray" [ngValue]="car.name">
+                    <option *ngFor="let car of defaultService.defaultCarArray; trackBy: trackByFn" [ngValue]="car.name">
                       {{ car.name }}
                     </option>
                   </select>
@@ -224,14 +225,14 @@
         </div>
         <!-- Основная часть -->
         <div *ngIf="getControls().secondCran.controls.length;">
-          <div *ngFor="let control of getControls().secondCran.controls; let i = index">
+          <div *ngFor="let control of getControls().secondCran.controls; let i = index; trackBy: trackByFn">
             <div class="columns mb-0" [formGroupName]="i">
               <!-- Выбор машины для отгрузки/погрузки -->
               <div class="column is-4">
                 <div class="select">
                   <select formControlName="name">
                     <option value="" disabled selected>Выберите машину</option>
-                    <option *ngFor="let car of defaultService.defaultCarArray" [ngValue]="car.name">
+                    <option *ngFor="let car of defaultService.defaultCarArray; trackBy: trackByFn" [ngValue]="car.name">
                       {{ car.name }}
                     </option>
                   </select>

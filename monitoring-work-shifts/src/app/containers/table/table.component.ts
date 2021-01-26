@@ -32,4 +32,8 @@ export class TableComponent {
     this.deleteDataUp.emit(id);
   }
 
+  trackByFn(index: any, item: any) {
+    return item.id;
+  }
+
 }

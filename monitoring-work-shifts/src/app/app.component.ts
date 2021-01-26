@@ -1,7 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { DemoData } from './services/demo.service';
-import { FilterService } from './services/filter.service';
 import { FormService } from './services/form.service';
 import { Http } from './services/http.service';
 import { ModalStateService } from './services/modalState.service';
@@ -12,7 +11,6 @@ import { Row } from './services/rowFactory.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   providers: [
-    FilterService,
     Http,
     DemoData,
     FormService
@@ -43,7 +41,7 @@ export class AppComponent implements OnInit {
   // Спускается в компонент modal-vindow
   form!: FormGroup;
 
-  constructor(private filterService: FilterService, private http: Http, private demo: DemoData, private formService: FormService, private fb: FormBuilder, private modalState: ModalStateService) { }
+  constructor(private http: Http, private demo: DemoData, private formService: FormService, private fb: FormBuilder, private modalState: ModalStateService) { }
 
   ngOnInit(): void {
 

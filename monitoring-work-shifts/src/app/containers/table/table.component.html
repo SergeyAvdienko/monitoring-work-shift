@@ -5,8 +5,8 @@
 
     <!-- Строка с заголовками столбцов -->
     <thead>
-      <tr *ngFor="let cells of rowsHead">
-        <th *ngFor="let cell of cells.array">
+      <tr *ngFor="let cells of rowsHead; trackBy: trackByFn">
+        <th *ngFor="let cell of cells.array; trackBy: trackByFn">
           <app-head-table [cell]="cell"></app-head-table>
         </th>
       </tr>
@@ -14,8 +14,8 @@
 
     <!-- Строки с отображением данных (рабочих смен) -->
     <tbody>
-      <tr *ngFor="let cells of rowsBody">
-        <td *ngFor="let cell of cells.array | filter: filterSrvice.validateStr()">
+      <tr *ngFor="let cells of rowsBody; trackBy: trackByFn">
+        <td *ngFor="let cell of cells.array | filter: filterSrvice.validateStr(); trackBy: trackByFn">
           <app-body-table [cell]="cell" [id]="cells.id" (update)="update($event)" (delete)="delete($event)">
           </app-body-table>
         </td>
