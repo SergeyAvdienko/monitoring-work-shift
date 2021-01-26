@@ -86,7 +86,7 @@
 
         <!-- Cтрока ввода для фильтра нужных строк Row по ячейкам Cell в списке рабочих смен  -->
         <div class="column is-one-quarter">
-          <app-filter (onSearch)="filter($event)"></app-filter>
+          <app-filter></app-filter>
         </div>
 
         <!-- Кнопка для добавления новых данных (рабочих смен)  -->
@@ -97,8 +97,8 @@
       </div>
 
       <!-- Список рабочих смен -->
-      <app-table [onSearch]="onSearch" [rowsBody]="rowsBody" (deleteDataUp)="deleteRow($event)"
-        (updateDataUp)="updateRow($event)"></app-table>
+      <app-table [rowsBody]="rowsBody" (deleteDataUp)="deleteRow($event)" (updateDataUp)="updateRow($event)">
+      </app-table>
 
       <!-- Форма -->
       <app-modal-window (addNewRow)="addNewRow($event)" [form]="form" [id]="id" (updateOldRow)="addOldRow($event)">

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Cell, CellUpgrade, CellFactory } from '../services/cellFactory.service';
+import { Cell, CellUpgrade, CellFactory } from '../../services/cellFactory.service';
 
 @Component({
   selector: 'app-body-table',

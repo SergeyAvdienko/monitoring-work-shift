@@ -2,7 +2,9 @@ import { Injectable } from "@angular/core";
 
 // === Используется для хранения состояния различных объектов
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 
 export class FormatDateService {
 

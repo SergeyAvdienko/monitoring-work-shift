@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 
 export class ValidateData {
 
-  blockedCharacters: Array<string> = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
+  blockedCharacters: Array<string> = ['/', '<', '>', '!', '=', '-', '"', '\'', '+', '?'];
   resolution: boolean = false;
 
   // Отвечает на вопрос содержится ли в строке символ, как в массиве blockedCharacters

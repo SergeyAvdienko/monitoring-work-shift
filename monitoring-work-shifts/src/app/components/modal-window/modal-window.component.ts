@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { ModalStateService } from '../services/modalState.service';
-import { Row } from '../services/rowFactory.service';
+import { ModalStateService } from '../../services/modalState.service';
+import { Row } from '../../services/rowFactory.service';
 
 @Component({
   selector: 'app-modal-window',

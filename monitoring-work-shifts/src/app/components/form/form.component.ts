@@ -1,13 +1,12 @@
 import { Component, Output, EventEmitter, Input } from '@angular/core';
 import { FormArray, FormGroup } from '@angular/forms';
-import { CalculateSevice } from '../services/calculate.service';
-import { Cell } from '../services/cellFactory.service';
-import { DefaultService } from '../services/defaultData.service';
-import { FormService } from '../services/form.service';
-import { FormatDateService } from '../services/formatDate.service';
-import { Http } from '../services/http.service';
-import { ModalStateService } from '../services/modalState.service';
-import { Row } from '../services/rowFactory.service';
+import { CalculateSevice } from '../../services/calculate.service';
+import { CompileRowService } from '../../services/compileRow.service';
+import { DefaultService } from '../../services/defaultData.service';
+import { FormService } from '../../services/form.service';
+import { Http } from '../../services/http.service';
+import { ModalStateService } from '../../services/modalState.service';
+import { Row } from '../../services/rowFactory.service';
 
 @Component({
   selector: 'app-form',
@@ -18,11 +17,13 @@ import { Row } from '../services/rowFactory.service';
     FormService,
     CalculateSevice,
     Http,
-    FormatDateService
+    CompileRowService
   ]
 })
 
 export class FormComponent {
+
+  //=== Исходящий поток
 
   // Передача в компонент App, чтобы перевести значение open в true 
   @Output() closeModal = new EventEmitter();
@@ -30,6 +31,8 @@ export class FormComponent {
   @Output() onAdd = new EventEmitter();
   // Передача в компонент App, чтобы изменить существующую запись в массиве rowsBody 
   @Output() onUpdate = new EventEmitter();
+
+  //=== Входящий поток
 
   // Данные спущены из App
   // this.form - заполнен данными всегда
@@ -49,7 +52,7 @@ export class FormComponent {
     public calculate: CalculateSevice,
     private http: Http,
     private modalState: ModalStateService,
-    private formatDate: FormatDateService
+    private compileRow: CompileRowService
   ) { }
 
   // Преобразовывае данные содержащиеся в FormArray
@@ -67,36 +70,13 @@ export class FormComponent {
     // Покажем пользователю начало процесса отправки данных на сервер
     this.loading = true;
 
-    // Достаем данные из формы
+    // Достаем данные из формы и занесем в formData
     const formData = { ...this.form.value };
 
-    // Формируем все ячейки в один объект. По сути в строку Row
-    const workShift: Cell[] = [
-      { title: `${formData.workerMan}`, type: 'text' },
-      { title: `${this.formatDate.formatDateTimeWorkShift(formData).start}`, type: 'date' },
-      { title: `${this.formatDate.formatDateTimeWorkShift(formData).end}`, type: 'date' },
-      { title: `${formData.cranType}`, type: 'text' },
-      { title: `${this.calculate.calculationsWork(this.form).summOnload}`, type: 'summOnload' },
-      { title: `${this.calculate.calculationsWork(this.form).summOffload}`, type: 'summOffload' },
-      { title: `${this.calculate.calculationsWork(this.form).summWork}`, type: 'summWork' },
-      { title: JSON.stringify(formData.firstCranWork), type: 'firstCran' },
-      { title: JSON.stringify(formData.secondCranWork), type: 'secondCran' },
-      { title: 'Редактировать', type: 'icon' },
-      { title: 'Удалить', type: 'icon' },
-    ];
-
-    // const printConsoleArrayWorkShift = () => {
-    //   workShift.forEach(element => {
-    //     console.log(element.title + " " + element.type)
-    //   });
-    // }
-    // Вывести массив workShift в консоль
-    // printConsoleArrayWorkShift();
-
-    // Запишем сформированный объект в Row
+    // Передадим formData в сервис для обработки и вернем обратно
     const row: Row = {
-      array: workShift
-    };
+      array: this.compileRow.compileRow(formData, this.form)
+    }
 
     // Отправим данные на сервер
     this.id == '' ? this.createNewRow(row) : this.updateNewRow(row)

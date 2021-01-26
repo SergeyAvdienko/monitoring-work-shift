@@ -30,11 +30,6 @@ export class AppComponent implements OnInit {
 
   title = 'Список рабочих смен';
 
-  // Данные принимаемые от Inputа в компоненте Filter 
-  // Обеспечиваем работу pipes/filter.pipes
-  // использую внутри компонента App для сортировки списка рабочих смен по ячейкам Cell[] и строкам Row
-  onSearch: string = '';
-
   // Массив с данными для заполнения списка рабочих смен
   // Спускается в 
   rowsBody: Row[] = [];
@@ -69,12 +64,6 @@ export class AppComponent implements OnInit {
         this.error = 'Произошла ошибка при получении информации с сервера. Приносим извинения за доставленные неудобства'
       })
 
-  }
-
-  // Передает валидированное значение в компонент Table
-  // Передача происходит <app-table [onSearch]="onSearch"></app-table> 
-  filter(event: any) {
-    this.onSearch = this.filterService.validateStr(event);
   }
 
   // Передает значение в modalStateService

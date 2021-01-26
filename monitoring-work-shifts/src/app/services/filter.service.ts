@@ -6,13 +6,15 @@ import { ValidateData } from "./validate.service";
 
 export class FilterService {
 
+  onSearch: string = '';
+
   // Обрабатывает value и возвращает после валидации
-  // Например сейчас будут отфильтровываться цифры 1-9, потому что они запрещены и фильтруются
+  // Например сейчас будут отфильтровываться символы ['/', '<', '>', '!', '=', '-', '"', '\'', '+', '?'] потому что они запрещены и фильтруются
   // для настройки следуйте в класс ValidateData
 
-  validateStr(value: string) {
+  validateStr() {
 
-    let arrayLetter: Array<string> = value.split('');
+    let arrayLetter: Array<string> = this.onSearch.split('');
     let data: string = '';
 
     for (let index = 0; index < arrayLetter.length; index++) {

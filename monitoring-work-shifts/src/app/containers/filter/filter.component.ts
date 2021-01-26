@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
+import { FilterService } from 'src/app/services/filter.service';
 
 @Component({
   selector: 'app-filter',
@@ -9,12 +10,12 @@ export class FilterComponent {
 
   @Output() onSearch = new EventEmitter();
 
-  constructor() { }
+  constructor(private filterService: FilterService) { }
 
   // Собирает вводимые символы с инпута и передает их в родительский компонент AppComponent
   onInput(event?: any) {
     const inputValue = (<HTMLInputElement>event?.target).value;
-    this.onSearch.emit(inputValue);
+    this.filterService.onSearch = inputValue;
   }
 
 }

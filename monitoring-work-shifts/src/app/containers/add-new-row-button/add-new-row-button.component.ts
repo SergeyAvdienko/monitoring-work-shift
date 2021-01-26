@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-import { ModalStateService } from '../services/modalState.service';
+import { Component } from '@angular/core';
+import { ModalStateService } from '../../services/modalState.service';
 
 @Component({
   selector: 'app-add-new-row-button',

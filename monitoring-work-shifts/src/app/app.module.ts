@@ -4,13 +4,13 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { FilterComponent } from './filter/filter.component';
-import { TableComponent } from './table/table.component';
-import { HeadTableComponent } from './head-table/head-table.component';
-import { BodyTableComponent } from './body-table/body-table.component';
-import { FormComponent } from './form/form.component';
-import { ModalWindowComponent } from './modal-window/modal-window.component';
-import { AddNewRowButtonComponent } from './add-new-row-button/add-new-row-button.component';
+import { FilterComponent } from './containers/filter/filter.component';
+import { TableComponent } from './components/table/table.component';
+import { HeadTableComponent } from './containers/head-table/head-table.component';
+import { BodyTableComponent } from './components/body-table/body-table.component';
+import { FormComponent } from './components/form/form.component';
+import { ModalWindowComponent } from './components/modal-window/modal-window.component';
+import { AddNewRowButtonComponent } from './containers/add-new-row-button/add-new-row-button.component';
 import { FilterPipe } from './pipes/filter.pipes';
 
 @NgModule({
