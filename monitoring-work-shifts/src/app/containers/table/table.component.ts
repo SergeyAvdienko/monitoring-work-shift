@@ -16,13 +16,13 @@ export class TableComponent {
   @Output() updateDataUp = new EventEmitter();
   @Output() deleteDataUp = new EventEmitter();
 
-  // Массив ячеек для передачи компоненту app-body-table
+  // Массив ячеек для передачи шаблону table для реализации *ngFor
   @Input() rowsBody!: Row[];
 
-  // Массив ячеек для передачи компоненту app-head-table
+  // Массив ячеек для передачи шаблону table для реализации *ngFor
   rowsHead: Row[] = this.defaultData.defaultHearRow;
 
-  constructor(private defaultData: DefaultService, public filterSrvice: FilterService) { }
+  constructor(private defaultData: DefaultService, public filterService: FilterService) { }
 
   update(id: any) {
     this.updateDataUp.emit(id);
@@ -32,7 +32,7 @@ export class TableComponent {
     this.deleteDataUp.emit(id);
   }
 
-  trackByFn(index: any, item: any) {
+  trackByFn(index: any = 0, item: any) {
     return item.id;
   }
 

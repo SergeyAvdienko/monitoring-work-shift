@@ -1,5 +1,6 @@
 import { Component, Output, EventEmitter, Input } from '@angular/core';
 import { FormArray, FormGroup } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { CalculateSevice } from '../../services/calculate.service';
 import { CompileRowService } from '../../services/compileRow.service';
 import { DefaultService } from '../../services/defaultData.service';
@@ -32,7 +33,7 @@ export class FormComponent {
   // Передача в компонент App, чтобы изменить существующую запись в массиве rowsBody 
   @Output() onUpdate = new EventEmitter();
 
-  //=== Входящий поток
+  //=== Входящие данные
 
   // Данные спущены из App
   // this.form - заполнен данными всегда
@@ -40,11 +41,16 @@ export class FormComponent {
   @Input() id!: string;
   @Input() form!: FormGroup;
 
+  // === 
+
   // Название модального окна
   title = 'Рабочая смена';
 
   // Меняет класс на кнопке <button class="button is-success" [ngClass]="{ 'is-loading': loading }" type="submit" ...
   loading: boolean = false;
+
+  // Сброс подписки
+  sub!: Subscription;
 
   constructor(
     public defaultService: DefaultService,
@@ -86,15 +92,17 @@ export class FormComponent {
   // Запускает цепь событий после сохранения на сервере новой строки (Row) в списке рабочих смен
   createNewRow(row: Row) {
 
-    this.http.setRowsBody(row)
+    this.sub = this.http.setRowsBody(row)
       .subscribe(response => {
         // console.log(Response, response)
         response = row;
 
         // Передаем данные в родительский компонент
-        this.send(response)
+        this.send(response);
         // Закрываем модельное окно
         this.closeModalWindow();
+        // Сбрасываем подписку на стрим
+        this.sub.unsubscribe();
 
         // Возвращаем loading в исходное состояние
         this.loading = false;
@@ -104,7 +112,8 @@ export class FormComponent {
 
   // Запускает цепь событий после изменения на сервере существующей строки (Row) в списке рабочих смен
   updateNewRow(row: Row) {
-    this.http.putRowsBody(row, this.id)
+
+    this.sub = this.http.putRowsBody(row, this.id)
       .subscribe(response => {
         // console.log(Response, response)
         response = row;
@@ -113,6 +122,8 @@ export class FormComponent {
         this.send(response)
         // Закрываем модельное окно
         this.closeModalWindow();
+        // Сбрасываем подписку на стрим
+        this.sub.unsubscribe();
 
         // Возвращаем loading в исходное состояние
         this.loading = false;
@@ -137,7 +148,6 @@ export class FormComponent {
 
   // Сбрасывает данные в форме
   resetForm() {
-    this.id = '';
     this.form = this.formService.createForm();
   }
 

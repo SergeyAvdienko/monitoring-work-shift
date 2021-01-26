@@ -23,8 +23,10 @@ export class BodyTableComponent implements OnInit {
 
   ngOnInit(): void {
 
+    // Обрабатыват каждую из ячеек поступающих на вход после filter.pipes
+    // console.log(this.cell)
+
     this.cellFormat = this.cellFactory.create(this.cell.title, this.cell.type);
-    // console.log(this.cellFormat)
 
   }
 

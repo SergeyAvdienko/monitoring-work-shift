@@ -14,6 +14,7 @@ export class CompileRowService {
   constructor(private formatDate: FormatDateService, private calculate: CalculateSevice,) { }
 
   compileRow(formData: any, form: FormGroup) {
+
     // Формируем все ячейки в один объект. По сути в строку Row
     const workShift: Cell[] = [
       { title: `${formData.workerMan}`, type: 'text' },

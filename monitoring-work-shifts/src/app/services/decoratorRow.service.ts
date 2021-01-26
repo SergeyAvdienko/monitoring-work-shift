@@ -1,6 +1,5 @@
 import { Injectable } from "@angular/core";
 import { Cell } from "./cellFactory.service";
-import { RowFactory } from "./rowFactory.service";
 @Injectable()
 
 export class DecoratorRow {
@@ -20,7 +19,7 @@ export class DecoratorRow {
 
     let newRow = this.row;
 
-    return this.row = this.row.filter(cell => {
+    return this.row = newRow.filter(cell => {
       if (this.includedCellType.includes(cell.type)) {
         return cell;
       } else {

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { ModalStateService } from '../../services/modalState.service';
 
 @Component({
@@ -8,10 +8,13 @@ import { ModalStateService } from '../../services/modalState.service';
 })
 export class AddNewRowButtonComponent {
 
+  @Output() createForm = new EventEmitter;
+
   constructor(private modalStateService: ModalStateService) { }
 
   // Открыть модальное окно
   onClick() {
+    this.createForm.emit();
     this.modalStateService.setModalState(true);
   }
 

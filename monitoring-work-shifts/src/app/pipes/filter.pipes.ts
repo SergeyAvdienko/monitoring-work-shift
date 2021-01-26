@@ -10,6 +10,7 @@ export class FilterPipe implements PipeTransform {
 
   // Трансформирует (отфильтровывает) данные в массиве rowsBody и возвращает их
   transform(cells: Cell[], search: string = ''): Cell[] {
+
     // Если пустая строка то просто возвращаем ячейку
     if (!search.trim()) return this.decoration(cells);
     // Фильтруем cells по символам в search 

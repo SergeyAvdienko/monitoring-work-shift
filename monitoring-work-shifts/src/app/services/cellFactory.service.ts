@@ -71,7 +71,7 @@ class сellDate {
   }
 }
 
-class cellFirstArray {
+class cellFirstCran {
   array: string;
   type: string = 'firstCran';
   constructor(arr: string) {
@@ -98,16 +98,17 @@ export class CellFactory {
     summOffload: сellSummOffload,
     summWork: cellSummWork,
     date: сellDate,
-    firstCran: cellFirstArray,
+    firstCran: cellFirstCran,
     secondCran: cellSecondCran
   }
 
   // Фабрика производит ячейку Cell типа CellUpgrade из исходной Cell
   create(info: any, type: string = 'title') {
 
-
     const cellClass = this.list[type] || this.list.title;
     const Cell = new cellClass(info, type);
+
+    // console.log(Cell)
 
     Cell.defineType = function () {
       console.log(`Ячейка с типом: ${this.type}`)

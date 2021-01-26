@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { DemoData } from './services/demo.service';
 import { FormService } from './services/form.service';
 import { Http } from './services/http.service';
@@ -29,7 +30,7 @@ export class AppComponent implements OnInit {
   title = 'Список рабочих смен';
 
   // Массив с данными для заполнения списка рабочих смен
-  // Спускается в 
+  // Спускается в app-table
   rowsBody: Row[] = [];
 
   // id сроки Row. Используется для поиска нужной строки в массиве
@@ -41,6 +42,9 @@ export class AppComponent implements OnInit {
   // Спускается в компонент modal-vindow
   form!: FormGroup;
 
+  // Сброс подписки на стрим
+  sub!: Subscription;
+
   constructor(private http: Http, private demo: DemoData, private formService: FormService, private fb: FormBuilder, private modalState: ModalStateService) { }
 
   ngOnInit(): void {
@@ -48,7 +52,7 @@ export class AppComponent implements OnInit {
     // 
     this.createRow()
 
-    this.http.getRowsBody()
+    this.sub = this.http.getRowsBody()
       .subscribe(response => {
 
         // console.log('Response', response)
@@ -57,19 +61,14 @@ export class AppComponent implements OnInit {
         // Редактирование демо-массива. Используйте сервис DemoData
         this.rowsBody = this.demo.demo();
 
+        // Сброс подписки на стрим
+        this.sub.unsubscribe();
+
       }, error => {
         // Не стал прописывать работу с ошибками по всему приложению
         this.error = 'Произошла ошибка при получении информации с сервера. Приносим извинения за доставленные неудобства'
       })
 
-  }
-
-  // Передает значение в modalStateService
-  // Открыть модальное окно после клика
-  // Сценарий действий createRow/updateRow
-  openModal() {
-    this.modalState.setModalState(true);
-    if (this.id == '') this.createRow();
   }
 
   // Добавляет в массив this.rowsBody: Row[] строку row: Row из компонента Form 
@@ -84,6 +83,7 @@ export class AppComponent implements OnInit {
 
   // Меняет в массиве this.rowsBody: Row[] строку row: Row из компонента Form
   addOldRow(row: Row) {
+
     // Приходит из Form, транзитом через ModalWindow
     this.rowsBody.forEach(rows => {
       if (rows.id === row.id) {
@@ -92,6 +92,7 @@ export class AppComponent implements OnInit {
         return;
       }
     })
+
   }
 
   // Выбирает строку, которую нужно удалять и делает это после ответа сервера
@@ -105,7 +106,7 @@ export class AppComponent implements OnInit {
       this.progressRef.nativeElement.value += countStep;
     }, timeStep);
 
-    this.http.deleteRowsBody(id)
+    this.sub = this.http.deleteRowsBody(id)
       .subscribe(() => {
         this.rowsBody = this.rowsBody.filter(row => row.id !== id);
         this.progressRef.nativeElement.value = 100;
@@ -114,6 +115,8 @@ export class AppComponent implements OnInit {
         // Обновляем значение
         setTimeout(() => {
           this.progressRef.nativeElement.value = 0;
+          // Сброс подписки на стрим
+          this.sub.unsubscribe();
         }, 500);
       }, error => {
         this.error = 'Произошла ошибка при удалении рабочей смены. Приносим извинения за доставленные неудобства'
@@ -124,13 +127,16 @@ export class AppComponent implements OnInit {
   // Создает строку (Row), которая попадет в список рабочх смен
   createRow() {
 
+    // Обнуляем id
+    if (this.id != '' || !this.id) {
+      this.id = '';
+    }
+
     // Все данные по дефолту. Принцип заполнения в this.updateRow
     // Подробности в this.formService
     this.form = this.formService.createForm();
     this.formService.addCarFirstCran(this.form);
     this.formService.addCarSecondCran(this.form);
-
-    // console.log({ ...this.form.value })
 
   }
 

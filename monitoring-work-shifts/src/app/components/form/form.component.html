@@ -225,14 +225,14 @@
         </div>
         <!-- Основная часть -->
         <div *ngIf="getControls().secondCran.controls.length;">
-          <div *ngFor="let control of getControls().secondCran.controls; let i = index; trackBy: trackByFn">
+          <div *ngFor="let control of getControls().secondCran.controls; let i = index;">
             <div class="columns mb-0" [formGroupName]="i">
               <!-- Выбор машины для отгрузки/погрузки -->
               <div class="column is-4">
                 <div class="select">
                   <select formControlName="name">
                     <option value="" disabled selected>Выберите машину</option>
-                    <option *ngFor="let car of defaultService.defaultCarArray; trackBy: trackByFn" [ngValue]="car.name">
+                    <option *ngFor="let car of defaultService.defaultCarArray" [ngValue]="car.name">
                       {{ car.name }}
                     </option>
                   </select>
