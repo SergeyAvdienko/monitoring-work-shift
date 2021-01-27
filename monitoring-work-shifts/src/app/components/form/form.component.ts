@@ -1,12 +1,7 @@
 import { Component, Output, EventEmitter, Input } from '@angular/core';
 import { FormArray, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { CalculateSevice } from '../../services/calculate.service';
-import { CompileRowService } from '../../services/compileRow.service';
-import { DefaultService } from '../../services/defaultData.service';
-import { FormService } from '../../services/form.service';
-import { Http } from '../../services/http.service';
-import { ModalStateService } from '../../services/modalState.service';
+import { AppFacade } from 'src/app/app.facade';
 import { Row } from '../../services/rowFactory.service';
 
 @Component({
@@ -14,11 +9,7 @@ import { Row } from '../../services/rowFactory.service';
   templateUrl: './form.component.html',
   styleUrls: ['./form.component.scss'],
   providers: [
-    DefaultService,
-    FormService,
-    CalculateSevice,
-    Http,
-    CompileRowService
+    AppFacade
   ]
 })
 
@@ -53,12 +44,7 @@ export class FormComponent {
   sub!: Subscription;
 
   constructor(
-    public defaultService: DefaultService,
-    public formService: FormService,
-    public calculate: CalculateSevice,
-    private http: Http,
-    private modalState: ModalStateService,
-    private compileRow: CompileRowService
+    private appFacade: AppFacade
   ) { }
 
   // Преобразовывае данные содержащиеся в FormArray
@@ -76,13 +62,13 @@ export class FormComponent {
     // Покажем пользователю начало процесса отправки данных на сервер
     this.loading = true;
 
-    // Достаем данные из формы и занесем в formData
-    const formData = { ...this.form.value };
-
-    // Передадим formData в сервис для обработки и вернем обратно
+    // Соберем строку нужного формата
     const row: Row = {
-      array: this.compileRow.compileRow(formData, this.form)
-    }
+      array: this.appFacade.register([
+        'Собери мне строку типа Row из данных полученных в FormData',
+        this.form
+      ])
+    };
 
     // Отправим данные на сервер
     this.id == '' ? this.createNewRow(row) : this.updateNewRow(row)
@@ -92,9 +78,18 @@ export class FormComponent {
   // Запускает цепь событий после сохранения на сервере новой строки (Row) в списке рабочих смен
   createNewRow(row: Row) {
 
-    this.sub = this.http.setRowsBody(row)
-      .subscribe(response => {
+    this.sub = this.appFacade.register([
+      'Создай новую строку типа Row в базе данных',
+      row
+    ])
+      .subscribe((response: Row) => {
+
+        // ===============================
         // console.log(Response, response)
+        // Принудительно меняем response на row, так как сейчас приходящие с Api данные не соответствуют требуемым
+        // Требует исправления после работы над слоем абстрации AppFacade
+        // ===============================
+
         response = row;
 
         // Передаем данные в родительский компонент
@@ -113,10 +108,21 @@ export class FormComponent {
   // Запускает цепь событий после изменения на сервере существующей строки (Row) в списке рабочих смен
   updateNewRow(row: Row) {
 
-    this.sub = this.http.putRowsBody(row, this.id)
-      .subscribe(response => {
+    this.sub = this.appFacade.register([
+      'Измени существующую строку типа Row в базе данных',
+      row,
+      this.id
+    ])
+      .subscribe((response: Row) => {
+
+        // ===============================
         // console.log(Response, response)
+        // Принудительно меняем response на row, так как сейчас приходящие с Api данные не соответствуют требуемым
+        // Требует исправления после работы над слоем абстрации AppFacade
+        // ===============================
+
         response = row;
+        response.id = this.id;
 
         // Передаем данные в родительский компонент
         this.send(response)
@@ -131,28 +137,118 @@ export class FormComponent {
   }
 
   // Передает в родительский компонент строку Row
-  send(responce: Row) {
+  send(response: Row) {
     if (this.id == '') {
-      this.onAdd.emit(responce)
+      this.onAdd.emit(response)
     } else {
-      responce.id = this.id;
-      this.onUpdate.emit(responce);
+      this.onUpdate.emit(response);
     }
   }
 
   // Передает в родительский компонент, что пора закрыть модальное окно
   closeModalWindow() {
-    this.modalState.setModalState(false);
+    this.appFacade.register([
+      'Закрой модальное окно',
+      false
+    ])
     this.resetForm();
   }
 
   // Сбрасывает данные в форме
   resetForm() {
-    this.form = this.formService.createForm();
+    this.form = this.appFacade.register([
+      'Создай новую форму'
+    ]);
   }
 
-  trackByFn(index: any, item: any) {
+  // Оптимизация рендеринга
+  trackByFn(index: number, item: any) {
+    index = index;
     return item.id;
+  }
+
+  // Добавить новую запись для второго крана
+  addCarFirstCran() {
+    return this.appFacade.register([
+      'Создай для первого крана новую запись отгрузок/погрузок автомобиля',
+      this.form,
+      'First'
+    ]);
+  }
+
+  // Добавить новую запись для второго крана
+  addCarSecondCran() {
+    return this.appFacade.register([
+      'Создай для второго крана новую запись отгрузок/погрузок автомобиля',
+      this.form,
+      'Second'
+    ]);
+  }
+
+  // Удалить запись для второго крана
+  deleteCarFirstCran(i: number) {
+    return this.appFacade.register([
+      'Удали запись отгрузок/погрузок автомобиля для первого крана',
+      this.form,
+      i,
+      'First'
+    ]);
+  }
+
+  // Удалить запись для второго крана
+  deleteCarSecondCran(i: number) {
+    return this.appFacade.register([
+      'Удали запись отгрузок/погрузок автомобиля для второго крана',
+      this.form,
+      i,
+      'Second'
+    ]);
+  }
+
+  // Посчитать сумму погрузок
+  // calculate.calculationsWork(form).summOnload
+  getSummOnload() {
+    return this.appFacade.register([
+      'Покажи мне сумму погрузок по всем учитываемым кранам',
+      this.form,
+      'onload'
+    ]);
+  }
+
+  // Посчитать сумму огрузок
+  // calculate.calculationsWork(form).summOffload
+  getSummOffload() {
+    return this.appFacade.register([
+      'Покажи мне сумму отгрузок по всем учитываемым кранам',
+      this.form,
+      'offload'
+    ]);
+  }
+
+  // Посчитать общую сумму
+  // calculate.calculationsWork(form).summWork
+  getSummWork() {
+    return this.appFacade.register([
+      'Покажи мне сумму всех погрузок/отгрузок по всем учитываемым кранам',
+      this.form,
+      'summWork'
+    ]);
+  }
+
+  // Извлечь дефолтные значения для заполнения элемента Select (defaultService.defaultCarArray)
+  getDefaultCarArray() {
+    return this.appFacade.register([
+      'Покажи мне дефолтные значения для заполнения элемента Select по типам автомобилей',
+      'car'
+    ]);
+  }
+
+  // Извлечь дефолтные значения для заполнения элемента Select (defaultService.defaultCranType)
+  getDefaultCranType() {
+    return this.appFacade.register([
+      'Покажи мне дефолтные значения для заполнения элемента Select по типам кранов',
+      'cran'
+    ]);
   }
 
 }

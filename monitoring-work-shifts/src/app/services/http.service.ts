@@ -19,7 +19,7 @@ export class Http {
 
   // Отправим данные на сервер для создания новой записи
   // Возвращаем стрим
-  setRowsBody(row: Row): Observable<Row> {
+  addRowsBody(row: Row): Observable<Row> {
     return this.http.post<Row>('https://jsonplaceholder.typicode.com/todos', row)
   }
 

@@ -31,4 +31,12 @@ export class DefaultService {
     }
   ]
 
+  getCranType() {
+    return this.defaultCranType
+  }
+
+  getCarArray() {
+    return this.defaultCarArray
+  }
+
 }

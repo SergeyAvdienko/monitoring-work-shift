@@ -7,13 +7,17 @@ import { FormatDateService } from "./formatDate.service";
 // === Используется для предоставления методов обработки данных
 // === Результаты полученные из Form превращаем в массив ячеек Cell[], который занесем в строку Row
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 
 export class CompileRowService {
 
   constructor(private formatDate: FormatDateService, private calculate: CalculateSevice,) { }
 
-  compileRow(formData: any, form: FormGroup) {
+  compileRow(form: FormGroup) {
+
+    const formData = { ...form.value };
 
     // Формируем все ячейки в один объект. По сути в строку Row
     const workShift: Cell[] = [

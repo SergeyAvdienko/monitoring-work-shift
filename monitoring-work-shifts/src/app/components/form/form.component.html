@@ -17,7 +17,7 @@
           [ngClass]="{ 'is-danger': form.get('cranType')?.invalid && id == '', 'is-success': form.get('cranType')?.valid && id == '', 'is-info': id != '' }">
           <select formControlName="cranType">
             <option value="" disabled selected>Выберите тип крана</option>
-            <option *ngFor="let cran of defaultService.defaultCranType; trackBy: trackByFn" [disabled]="id != ''"
+            <option *ngFor="let cran of getDefaultCranType(); trackBy: trackByFn" [disabled]="id != ''"
               [ngValue]="cran.type">{{
               cran.type }}</option>
           </select>
@@ -166,7 +166,7 @@
                 <div class="select">
                   <select formControlName="name">
                     <option value="" disabled selected>Выберите машину</option>
-                    <option *ngFor="let car of defaultService.defaultCarArray; trackBy: trackByFn" [ngValue]="car.name">
+                    <option *ngFor="let car of getDefaultCarArray(); trackBy: trackByFn" [ngValue]="car.name">
                       {{ car.name }}
                     </option>
                   </select>
@@ -190,7 +190,7 @@
               </div>
               <!-- Удалить запись машина/погружено/выгружено -->
               <div class="column is-2" style="display: flex; justify-items: center; align-items: center;">
-                <span class="icon" style="flex: 1;" (click)="formService.deleteFirstCran(form, i)">
+                <span class="icon" style="flex: 1;" (click)="deleteCarFirstCran(i)">
                   <i class="fas fa-trash has-text-danger"></i>
                 </span>
               </div>
@@ -201,7 +201,7 @@
         <div class="columns mb-0">
           <div class="column is-4">
             <button class="button is-success is-outlined is-fullwidth" type="button"
-              (click)="formService.addCarFirstCran(form)">Добавить
+              (click)="addCarFirstCran()">Добавить
               запись</button>
           </div>
           <div class="column is-3"></div>
@@ -232,7 +232,7 @@
                 <div class="select">
                   <select formControlName="name">
                     <option value="" disabled selected>Выберите машину</option>
-                    <option *ngFor="let car of defaultService.defaultCarArray" [ngValue]="car.name">
+                    <option *ngFor="let car of getDefaultCarArray()" [ngValue]="car.name">
                       {{ car.name }}
                     </option>
                   </select>
@@ -256,7 +256,7 @@
               </div>
               <!-- Удалить запись машина/погружено/выгружено -->
               <div class="column is-2" style="display: flex; justify-items: center; align-items: center;">
-                <span class="icon" style="flex: 1;" (click)="formService.deleteSecondCran(form, i)">
+                <span class="icon" style="flex: 1;" (click)="deleteCarSecondCran(i)">
                   <i class="fas fa-trash has-text-danger"></i>
                 </span>
               </div>
@@ -267,7 +267,7 @@
         <div class="columns mb-0">
           <div class="column is-4">
             <button class="button is-success is-outlined is-fullwidth" type="button"
-              (click)="formService.addCarSecondCran(form)">Добавить
+              (click)="addCarSecondCran()">Добавить
               запись</button>
           </div>
           <div class="column is-3"></div>
@@ -280,13 +280,13 @@
       <div class="box is-fullwidth has-text-centered">
         <div class="tags are-medium">
           <span class="tag">Погружено тонн:
-            <b class="ml-2">{{ calculate.calculationsWork(form).summOnload }}</b>
+            <b class="ml-2">{{ getSummOnload() }}</b>
           </span>
           <span class="tag">Разгружено тонн:
-            <b class="ml-2">{{ calculate.calculationsWork(form).summOffload}}</b>
+            <b class="ml-2">{{ getSummOffload() }}</b>
           </span>
           <span class="tag">Всего тонн:
-            <b class="ml-2">{{ calculate.calculationsWork(form).summWork }}</b>
+            <b class="ml-2">{{ getSummWork() }}</b>
           </span>
         </div>
       </div>
