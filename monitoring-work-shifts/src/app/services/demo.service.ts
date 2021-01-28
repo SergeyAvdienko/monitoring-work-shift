@@ -1,9 +1,11 @@
 import { Injectable } from "@angular/core";
 import { Row } from "./rowFactory.service";
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 
-export class DemoData {
+export class DemoDataService {
 
   private demoArray: Row[] = [
     {

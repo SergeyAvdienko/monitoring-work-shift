@@ -15,7 +15,7 @@
     <!-- Строки с отображением данных (рабочих смен) -->
     <tbody>
       <tr *ngFor="let cells of rowsBody;">
-        <td *ngFor="let cell of cells.array | filter: filterService.validateStr();">
+        <td *ngFor="let cell of cells.array | filter: validateString();">
           <app-body-table [cell]="cell" [id]="cells.id" (update)="update($event)" (delete)="delete($event)">
           </app-body-table>
         </td>

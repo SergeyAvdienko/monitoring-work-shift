@@ -87,7 +87,9 @@ class cellSecondCran {
   }
 }
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 
 export class CellFactory {
 

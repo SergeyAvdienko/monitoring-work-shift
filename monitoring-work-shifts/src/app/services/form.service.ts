@@ -1,8 +1,11 @@
 import { Injectable } from "@angular/core";
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Cell } from "./cellFactory.service";
 import { DefaultService } from "./defaultData.service";
-@Injectable()
+
+@Injectable({
+  providedIn: 'root'
+})
 
 export class FormService {
 
@@ -40,13 +43,33 @@ export class FormService {
   }
 
   // Добавляет данные в FormArray - firstCranWork
-  addCarFirstCran(form: FormGroup): void {
-    (<FormArray>form.controls['firstCranWork']).push(this.newFormGroup());
+  addCarFirstCran(form: FormGroup, array: string = ''): void {
+    if (array === '') {
+      (<FormArray>form.controls['firstCranWork']).push(this.newFormGroup());
+    } else {
+      JSON.parse(array).forEach((element: any) => {
+        (<FormArray>form.controls['firstCranWork']).push(this.fb.group({
+          name: new FormControl(element.name), // Грузовик 1, Грузовик 2 ....
+          onload: new FormControl(element.onload),
+          offload: new FormControl(element.offload)
+        }));
+      });
+    }
   };
 
   // Добавляет данные в FormArray - secondCranWork;
-  addCarSecondCran(form: FormGroup): void {
-    (<FormArray>form.controls['secondCranWork']).push(this.newFormGroup());
+  addCarSecondCran(form: FormGroup, array: string = ''): void {
+    if (array === '') {
+      (<FormArray>form.controls['secondCranWork']).push(this.newFormGroup());
+    } else {
+      JSON.parse(array).forEach((element: any) => {
+        (<FormArray>form.controls['secondCranWork']).push(this.fb.group({
+          name: new FormControl(element.name), // Грузовик 1, Грузовик 2 ....
+          onload: new FormControl(element.onload),
+          offload: new FormControl(element.offload)
+        }));
+      });
+    }
   };
 
   // Шаблон данных для заполнения FormArray (используется addCarFirstCran/addCardSecondCran)

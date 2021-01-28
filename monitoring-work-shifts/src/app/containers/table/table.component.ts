@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FilterService } from 'src/app/services/filter.service';
-import { DefaultService } from '../../services/defaultData.service';
+import { AppFacade } from 'src/app/app.facade';
 import { Row } from '../../services/rowFactory.service';
 
 @Component({
@@ -8,7 +7,7 @@ import { Row } from '../../services/rowFactory.service';
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],
   providers: [
-    DefaultService
+    AppFacade
   ]
 })
 export class TableComponent {
@@ -20,9 +19,22 @@ export class TableComponent {
   @Input() rowsBody!: Row[];
 
   // Массив ячеек для передачи шаблону table для реализации *ngFor
-  rowsHead: Row[] = this.defaultData.defaultHearRow;
+  rowsHead: Row[] = this.getDefaultHeadRow();
 
-  constructor(private defaultData: DefaultService, public filterService: FilterService) { }
+  constructor(private appFacade: AppFacade) { }
+
+  getDefaultHeadRow() {
+    return this.appFacade.register([
+      'Покажи мне дефолтные значения для заполнения шапки таблицы',
+      'headRow'
+    ]);
+  }
+
+  validateString() {
+    return this.appFacade.register([
+      'Валидируй символы в строке'
+    ])
+  }
 
   update(id: any) {
     this.updateDataUp.emit(id);
@@ -32,7 +44,7 @@ export class TableComponent {
     this.deleteDataUp.emit(id);
   }
 
-  trackByFn(index: any = 0, item: any) {
+  trackByFn(index: number, item: any) {
     return item.id;
   }
 

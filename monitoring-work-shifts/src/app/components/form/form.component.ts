@@ -163,7 +163,6 @@ export class FormComponent {
 
   // Оптимизация рендеринга
   trackByFn(index: number, item: any) {
-    index = index;
     return item.id;
   }
 

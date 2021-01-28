@@ -1,12 +1,15 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { ModalStateService } from '../../services/modalState.service';
+import { AppFacade } from 'src/app/app.facade';
 import { Row } from '../../services/rowFactory.service';
 
 @Component({
   selector: 'app-modal-window',
   templateUrl: './modal-window.component.html',
-  styleUrls: ['./modal-window.component.scss']
+  styleUrls: ['./modal-window.component.scss'],
+  providers: [
+    AppFacade
+  ]
 })
 export class ModalWindowComponent {
 
@@ -23,11 +26,22 @@ export class ModalWindowComponent {
   @Input() id!: string;
   @Input() form!: FormGroup;
 
-  constructor(public modalState: ModalStateService) { }
+  constructor(public appFacade: AppFacade) { }
 
   // Закрыть модальное окно
   closeModalWindow() {
-    this.modalState.setModalState(false);
+    this.appFacade.register([
+      'Закрой модальное окно',
+      false
+    ]);
+  }
+
+  // Показать состояние модального окна
+  getModalState() {
+    return this.appFacade.register([
+      'Покажи состояние модального окна',
+      'state'
+    ])
   }
 
   // Создание новых строк

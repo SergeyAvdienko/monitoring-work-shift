@@ -1,10 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { DemoData } from './services/demo.service';
-import { FormService } from './services/form.service';
-import { Http } from './services/http.service';
-import { ModalStateService } from './services/modalState.service';
+import { AppFacade } from './app.facade';
 import { Row } from './services/rowFactory.service';
 
 @Component({
@@ -12,9 +9,7 @@ import { Row } from './services/rowFactory.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   providers: [
-    Http,
-    DemoData,
-    FormService
+    AppFacade
   ]
 })
 
@@ -45,26 +40,30 @@ export class AppComponent implements OnInit {
   // Сброс подписки на стрим
   sub!: Subscription;
 
-  constructor(private http: Http, private demo: DemoData, private formService: FormService, private fb: FormBuilder, private modalState: ModalStateService) { }
+  constructor(private appFacade: AppFacade) { }
 
   ngOnInit(): void {
 
-    // 
-    this.createRow()
+    this.createRow();
 
-    this.sub = this.http.getRowsBody()
-      .subscribe(response => {
+    this.sub = this.appFacade.register([
+      'Покажи исходные данные для отображения в таблице',
+    ])
+      .subscribe((response: any) => {
 
         // console.log('Response', response)
 
         // Так как данные с сервера не подходят для нас, присоеденим демо-массив
         // Редактирование демо-массива. Используйте сервис DemoData
-        this.rowsBody = this.demo.demo();
+
+        this.rowsBody = this.appFacade.register([
+          'Загрузи демо массив с данными для отображения в таблице'
+        ])
 
         // Сброс подписки на стрим
         this.sub.unsubscribe();
 
-      }, error => {
+      }, (error: any) => {
         // Не стал прописывать работу с ошибками по всему приложению
         this.error = 'Произошла ошибка при получении информации с сервера. Приносим извинения за доставленные неудобства'
       })
@@ -106,7 +105,10 @@ export class AppComponent implements OnInit {
       this.progressRef.nativeElement.value += countStep;
     }, timeStep);
 
-    this.sub = this.http.deleteRowsBody(id)
+    this.sub = this.appFacade.register([
+      'Удали существующую строку типа Row в базе данных',
+      id
+    ])
       .subscribe(() => {
         this.rowsBody = this.rowsBody.filter(row => row.id !== id);
         this.progressRef.nativeElement.value = 100;
@@ -118,7 +120,7 @@ export class AppComponent implements OnInit {
           // Сброс подписки на стрим
           this.sub.unsubscribe();
         }, 500);
-      }, error => {
+      }, (error: any) => {
         this.error = 'Произошла ошибка при удалении рабочей смены. Приносим извинения за доставленные неудобства'
       });
 
@@ -132,11 +134,21 @@ export class AppComponent implements OnInit {
       this.id = '';
     }
 
-    // Все данные по дефолту. Принцип заполнения в this.updateRow
-    // Подробности в this.formService
-    this.form = this.formService.createForm();
-    this.formService.addCarFirstCran(this.form);
-    this.formService.addCarSecondCran(this.form);
+    this.form = this.appFacade.register([
+      'Создай новую форму'
+    ]);
+
+    this.appFacade.register([
+      'Создай для первого крана новую запись отгрузок/погрузок автомобиля',
+      this.form,
+      'First'
+    ]);
+
+    this.appFacade.register([
+      'Создай для второго крана новую запись отгрузок/погрузок автомобиля',
+      this.form,
+      'Second'
+    ]);
 
   }
 
@@ -145,34 +157,34 @@ export class AppComponent implements OnInit {
 
     this.rowsBody.forEach(row => {
 
+      // Фиксируем this.id и спускаем вместе с this.form и вместе c this.open в MadalWindow
+      this.id = id;
+
       if (row.id == id) {
-        // Тип Row: [array: [], id: '']
-        // Нужную строку помещаем в cell из нее наполняем this.form
-        let cell = row.array
 
-        this.form = this.formService.updateForm(cell);
+        this.form = this.appFacade.register([
+          'Обнови форму заполнив ее предоставленными данными',
+          row.array
+        ]);
 
-        // Завершаем наполнение данными FormArray: firstCran (какие машины грзились первым краном)
-        JSON.parse(cell[7].title).forEach((element: any) => {
-          (<FormArray>this.form.controls['firstCranWork']).push(this.fb.group({
-            name: new FormControl(element.name), // Грузовик 1, Грузовик 2 ....
-            onload: new FormControl(element.onload),
-            offload: new FormControl(element.offload)
-          }));
-        });
+        this.appFacade.register([
+          'Создай для первого крана новую запись отгрузок/погрузок автомобиля',
+          this.form,
+          row.array[7].title,
+          'First'
+        ]);
 
-        // грузились вторым краном
-        JSON.parse(cell[8].title).forEach((element: any) => {
-          (<FormArray>this.form.controls['secondCranWork']).push(this.fb.group({
-            name: new FormControl(element.name), // Грузовик 1, Грузовик 2 ....
-            onload: new FormControl(element.onload),
-            offload: new FormControl(element.offload)
-          }));
-        });
+        this.appFacade.register([
+          'Создай для второго крана новую запись отгрузок/погрузок автомобиля',
+          this.form,
+          row.array[8].title,
+          'Second'
+        ]);
 
-        // Фиксируем this.id и спускаем вместе с this.form и вместе c this.open в MadalWindow
-        this.id = id;
-        this.modalState.setModalState(true);
+        this.appFacade.register([
+          'Открой модальное окно',
+          true
+        ])
 
         return;
       };

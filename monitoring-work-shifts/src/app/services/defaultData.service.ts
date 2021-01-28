@@ -17,7 +17,7 @@ export class DefaultService {
 
 
   // Базовые названия для столбцов в листе отображения рабочих смен
-  defaultHearRow: Row[] = [
+  defaultHeadRow: Row[] = [
     {
       array: [
         { title: 'Фамилия и имя', type: 'text' },
@@ -37,6 +37,14 @@ export class DefaultService {
 
   getCarArray() {
     return this.defaultCarArray
+  }
+
+  getHeadRow() {
+    return this.defaultHeadRow
+  }
+
+  getDefaultTime() {
+    return this.defaultTime;
   }
 
 }

@@ -3,7 +3,9 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { Row } from "./rowFactory.service";
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 
 export class Http {
 
@@ -13,7 +15,7 @@ export class Http {
   // Каждая смена является массивом ячеек типа Row[], 
   // которые состоят из Row.id - присвоенного сервером и свойством Row.array - массив ячеек типа Cell[]
   // Возвращаем стрим
-  getRowsBody(): Observable<Row[]> {
+  getTable(): Observable<Row[]> {
     return this.http.get<Row[]>('https://jsonplaceholder.typicode.com/users?_limit=3')
   }
 

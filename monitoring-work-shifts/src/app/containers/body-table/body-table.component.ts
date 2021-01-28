@@ -1,12 +1,13 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Cell, CellUpgrade, CellFactory } from '../../services/cellFactory.service';
+import { AppFacade } from 'src/app/app.facade';
+import { Cell, CellUpgrade } from '../../services/cellFactory.service';
 
 @Component({
   selector: 'app-body-table',
   templateUrl: './body-table.component.html',
   styleUrls: ['./body-table.component.scss'],
   providers: [
-    CellFactory
+    AppFacade
   ]
 })
 export class BodyTableComponent implements OnInit {
@@ -19,14 +20,16 @@ export class BodyTableComponent implements OnInit {
 
   cellFormat!: CellUpgrade;
 
-  constructor(private cellFactory: CellFactory) { }
+  constructor(private appFacade: AppFacade) { }
 
   ngOnInit(): void {
 
-    // Обрабатыват каждую из ячеек поступающих на вход после filter.pipes
-    // console.log(this.cell)
-
-    this.cellFormat = this.cellFactory.create(this.cell.title, this.cell.type);
+    // Обрабатыват каждую из ячеек поступающих на вход
+    this.cellFormat = this.appFacade.register([
+      'Обработай ячейку Cell с помощью паттерна Factory',
+      this.cell.title,
+      this.cell.type
+    ]);
 
   }
 

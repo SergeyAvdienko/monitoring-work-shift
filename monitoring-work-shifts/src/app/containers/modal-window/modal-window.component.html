@@ -1,4 +1,4 @@
-<div class="modal" [ngClass]="{ 'is-active': modalState.getModalState() }">
+<div class="modal" [ngClass]="{ 'is-active': getModalState() }">
   <div class="modal-background" (click)="closeModalWindow()"></div>
 
   <div class="modal-content">
